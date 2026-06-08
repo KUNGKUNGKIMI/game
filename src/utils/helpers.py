@@ -1,25 +1,9 @@
-import os
 from typing import Tuple, Optional
 import pygame
 from src.config import (
     CELL_SIZE, GRID_OFFSET_X, GRID_OFFSET_Y, GRID_COLS, GRID_ROWS,
     COLORS
 )
-from src.managers.resource_manager import resource_path
-
-
-_FALLBACK_FONTS_LOADED = False
-_FALLBACK_FONT_PATH = ""
-
-
-def _init_fallback_fonts():
-    global _FALLBACK_FONTS_LOADED, _FALLBACK_FONT_PATH
-    if _FALLBACK_FONTS_LOADED:
-        return
-    cjk_path = resource_path(os.path.join("assets", "fonts", "DroidSansFallbackFull.ttf"))
-    if os.path.exists(cjk_path):
-        _FALLBACK_FONT_PATH = cjk_path
-    _FALLBACK_FONTS_LOADED = True
 
 
 def grid_to_pixel(col: int, row: int) -> Tuple[int, int]:
@@ -70,30 +54,13 @@ def _get_font(size: int, font_name: Optional[str] = None):
     if key in _font_cache:
         return _font_cache[key]
 
-    _init_fallback_fonts()
-    font = None
-
     try:
         if font_name:
             font = pygame.font.Font(font_name, size)
         else:
-            pp_path = resource_path(os.path.join("assets", "fonts", "PressStart2P.ttf"))
-            if os.path.exists(pp_path):
-                font = pygame.font.Font(pp_path, size)
-            else:
-                font = pygame.font.Font(None, size)
+            # 使用系统默认字体 — 支持所有语言（英文/中文/日文等）
+            font = pygame.font.Font(None, size)
     except (pygame.error, FileNotFoundError):
-        font = None
-
-    # 回退链：PressStart2P失败 → DroidSansFallback
-    if font is None and _FALLBACK_FONT_PATH:
-        try:
-            font = pygame.font.Font(_FALLBACK_FONT_PATH, size)
-        except (pygame.error, FileNotFoundError):
-            font = None
-
-    # 终极回退：系统默认字体
-    if font is None:
         font = pygame.font.Font(None, size)
 
     _font_cache[key] = font
