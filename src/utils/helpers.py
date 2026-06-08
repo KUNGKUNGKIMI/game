@@ -56,18 +56,27 @@ def _get_font(size: int, font_name: Optional[str] = None):
     if key in _font_cache:
         return _font_cache[key]
 
-    try:
-        if font_name:
+    font = None
+
+    if font_name:
+        try:
             font = pygame.font.Font(font_name, size)
-        else:
-            # 使用 DroidSansFallbackFull.ttf — 支持英文 + 完整中文CJK
+        except (pygame.error, FileNotFoundError):
+            pass
+
+    if font is None:
+        try:
             font_path = resource_path(os.path.join("assets", "fonts", "DroidSansFallbackFull.ttf"))
             if os.path.exists(font_path):
                 font = pygame.font.Font(font_path, size)
-            else:
-                font = pygame.font.Font(None, size)
-    except (pygame.error, FileNotFoundError):
-        font = pygame.font.Font(None, size)
+        except (pygame.error, FileNotFoundError):
+            pass
+
+    if font is None:
+        try:
+            font = pygame.font.Font(None, size)
+        except (pygame.error, FileNotFoundError):
+            font = pygame.font.Font(None, size)
 
     _font_cache[key] = font
     return font
