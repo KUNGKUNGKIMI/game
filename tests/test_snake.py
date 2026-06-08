@@ -8,10 +8,8 @@ from src.config import (
 def test_initial_position():
     snake = Snake()
     assert len(snake.body) == INITIAL_SNAKE_LENGTH
-    # 蛇头在 (INITIAL_SNAKE_X - (INITIAL_SNAKE_LENGTH-1), INITIAL_SNAKE_Y)
-    # 因为 body 从右向左构建 (appendleft)
-    expected_head_x = INITIAL_SNAKE_X - (INITIAL_SNAKE_LENGTH - 1)
-    assert snake.get_head_pos() == (expected_head_x, INITIAL_SNAKE_Y)
+    # 蛇头在 (INITIAL_SNAKE_X, INITIAL_SNAKE_Y)
+    assert snake.get_head_pos() == (INITIAL_SNAKE_X, INITIAL_SNAKE_Y)
     assert snake.direction == INITIAL_DIRECTION
 
 

@@ -13,9 +13,9 @@ class Snake:
         # 蛇身: deque of (col, row), 头部在左
         body = deque()
         start_x, start_y = INITIAL_SNAKE_X, INITIAL_SNAKE_Y
-        # 从右向左生长（默认向右移动）
+        # 从右向左生长（默认向右移动），头部在 index 0
         for i in range(INITIAL_SNAKE_LENGTH):
-            body.appendleft((start_x - i, start_y))
+            body.append((start_x - i, start_y))
         self.body = body
         self.direction = INITIAL_DIRECTION  # 当前方向
         self.direction_queue: List[Tuple[int, int]] = []  # 方向队列（缓冲输入）
