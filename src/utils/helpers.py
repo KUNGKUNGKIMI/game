@@ -1,9 +1,11 @@
+import os
 from typing import Tuple, Optional
 import pygame
 from src.config import (
     CELL_SIZE, GRID_OFFSET_X, GRID_OFFSET_Y, GRID_COLS, GRID_ROWS,
     COLORS
 )
+from src.managers.resource_manager import resource_path
 
 
 def grid_to_pixel(col: int, row: int) -> Tuple[int, int]:
@@ -58,8 +60,12 @@ def _get_font(size: int, font_name: Optional[str] = None):
         if font_name:
             font = pygame.font.Font(font_name, size)
         else:
-            # 使用系统默认字体 — 支持所有语言（英文/中文/日文等）
-            font = pygame.font.Font(None, size)
+            # 使用 DroidSansFallbackFull.ttf — 支持英文 + 完整中文CJK
+            font_path = resource_path(os.path.join("assets", "fonts", "DroidSansFallbackFull.ttf"))
+            if os.path.exists(font_path):
+                font = pygame.font.Font(font_path, size)
+            else:
+                font = pygame.font.Font(None, size)
     except (pygame.error, FileNotFoundError):
         font = pygame.font.Font(None, size)
 
